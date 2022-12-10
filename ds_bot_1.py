@@ -21,7 +21,7 @@ async def on_message(message):
     if message.content == "":
         return
     if message.content.startswith("!help"):
-        await message.channel.send("I am an openai language model that can generate responses to most questions.\nFor "
+        await message.channel.send("I am a discord bot that can use an openai language model that can generate responses to most questions.\nFor "
         "example, you can ask me \"What is the meaning of life?\" or \"What is the "
         "meaning of the universe?\"\nI can also generate images based on a prompt. "
         "For example, you can ask me !createImage a picture of a dog.\"")
@@ -50,9 +50,9 @@ async def on_message(message):
         return
     # Use GPT-3 to generate a response to the user's message if it isn't a command
     response = openai.Completion.create(
-        engine="text-davinci-002",
+        engine="text-davinci-003",
         prompt=f"{message.author} said: {message.content}\nBot response:",
-        temperature=0.1,
+        temperature=0.9,
         max_tokens=2048,
         top_p=1,
         frequency_penalty=0,
