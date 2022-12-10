@@ -21,7 +21,7 @@ requests
 dotenv
 ```
 5. Run the main.py file with `python main.py` in the root directory of the project
-6. Invite the bot to your server with admin permissions (You can give it less permissions if you want, but it will not work as intended without a change to the intents in main.py)
+6. Invite the bot to your server with admin permissions (You can give it fewer permissions if you want, but it will not work as intended without a change to the intents in main.py)
 
 ## How to run as a demo bot in terminal
 Functionality available in the terminal:
