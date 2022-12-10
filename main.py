@@ -1,4 +1,5 @@
 import sys
+import pymongo
 
 def main(args):
     if len(args) == 1:
@@ -9,7 +10,25 @@ def main(args):
         print('Usage: python main.py [--demo]')
 
 def demo():
-    pass
+    print('Demo mode. This will not connect to Discord or OpenAI.')
+    print('Enter a message to send to the bot. Enter "exit" to quit.')
+    while True:
+        message = input('Message: ')
+        if message == 'exit':
+            break
+        elif message.startswith('!help'):
+            print("I am a discord bot primarily designed to answer questions regarding a netflix dataset"
+            "\nI can also generate images based on a prompt. "
+            "For example, you can ask me \"!createImage a picture of a dog.\"\n"
+            "You can also ask me to use OpenAI's gpt3 model to generate a response to a message by prefixing it with \"!gpt3 \".")
+        elif message.startswith('!createImage'):
+            print(f'Image of {message[13:]} generated')
+        elif message.startswith('!gpt3'):
+            print(f'Response generated for {message[6:]}')
+        elif message.startswith('!'):
+            print('Unknown command. Try !help.')
+        else:
+            print('Message sent')
 
 def full_functionality():
     import openai
@@ -37,16 +56,16 @@ def full_functionality():
             await message.channel.send("I am a discord bot primarily designed to answer questions regarding a netflix dataset"
             "\nI can also generate images based on a prompt. "
             "For example, you can ask me \"!createImage a picture of a dog.\"\n"
-            "You can also ask me to use openai's gpt3 model to generate a response to a message by prefixing it with \"!gpt3 \".")
+            "You can also ask me to use OpenAI's gpt3 model to generate a response to a message by prefixing it with \"!gpt3 \".")
             return
         if message.content.startswith("!createImage"):
-            image = openai.Image.create(
-                prompt=message.content[13:],
-                n=1,
-                size="1024x1024"
-            )
-            # download the image and send it
             try:
+                image = openai.Image.create(
+                    prompt=message.content[13:],
+                    n=1,
+                    size="1024x1024"
+                )
+                # download the image and send it
                 image_r = requests.get(image['data'][0]['url'], allow_redirects=True).content
                 open('temp_image.png', 'wb').write(image_r)
                 await message.channel.send(file=discord.File('temp_image.png'))
@@ -62,7 +81,7 @@ def full_functionality():
             # Use GPT-3 to generate a response to the user's message if they ask for it
             response = openai.Completion.create(
                 engine="text-davinci-003",
-                prompt=f"{message.author} said: {message.content}\nBot response:",
+                prompt=f"{message.author} said: {message.content[6:]}\nBot response:",
                 temperature=0.9,
                 max_tokens=2048,
                 top_p=1,
