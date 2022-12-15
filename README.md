@@ -9,7 +9,6 @@ This is my final project for DS 2002 in the Fall 2022 semester. It is a discord 
 3. Add the following to the .env file
 ```
 DISCORD_TOKEN=<your discord bot token>
-MONGO_URI=<your mongo uri>
 OPENAI_API_TOKEN=<your openai api token>
 ```
 4. Ensure you have the following python packages installed (this can be done by running `pip install -r requirements.txt` in the root directory of the project)
