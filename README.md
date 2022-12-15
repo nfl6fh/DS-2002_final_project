@@ -14,11 +14,11 @@ OPENAI_API_TOKEN=<your openai api token>
 ```
 4. Ensure you have the following python packages installed (this can be done by running `pip install -r requirements.txt` in the root directory of the project)
 ```
-discord.py
+discord
 pymongo
 openai
 requests
-dotenv
+python-dotenv
 pandas
 ```
 5. Run the main.py file with `python main.py` in the root directory of the project
