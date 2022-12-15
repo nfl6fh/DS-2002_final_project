@@ -1,0 +1,45 @@
+{"intents": [
+    {
+        "tag": "greeting",
+        "patterns": ["Hi", "How are you", "Good Morning", "Hello", "Good day"],
+        "responses": ["Hello", "Hi", "Good day", "Good Morning"],
+        "context_set": ""
+    },
+    {
+        "tag": "top5_movies_2020",
+        "patterns": ["What are the top 5 movies of 2020", "Top 5 movies of 2020", "Top 5 movies from 2 years ago", "Top 5 movies from two years ago"],
+        "responses": ["!q_t5m2020"],
+        "context_set": ""
+    },
+    {
+        "tag": "top5_movies_2021",
+        "patterns": ["What are the top 5 movies of 2021", "Top 5 movies of 2021", "Top 5 movies from 1 year ago", "Top 5 movies from one year ago"],
+        "responses": ["!q_t5m2021"],
+        "context_set": ""
+    },
+    {
+        "tag": "top5_movies_2019",
+        "patterns": ["What are the top 5 movies of 2019", "Top 5 movies of 2019", "Top 5 movies from 3 years ago", "Top 5 movies from three years ago"],
+        "responses": ["!q_t5m2019"],
+        "context_set": ""
+    },
+    {
+        "tag": "top5_shows_2020", 
+        "patterns": ["What are the top 5 shows of 2020", "Top 5 shows of 2020", "Top 5 shows from 2 years ago", "Top 5 shows from two years ago"], 
+        "responses": ["!q_t5s2020"],
+        "context_set": ""
+    },
+    {
+        "tag": "top5_shows_2021",
+        "patterns": ["What are the top 5 shows of 2021", "Top 5 shows of 2021", "Top 5 shows from 1 year ago", "Top 5 shows from one year ago"],
+        "responses": ["!q_t5s2021"],
+        "context_set": ""
+    },
+    {
+        "tag": "top5_shows_2019",
+        "patterns": ["What are the top 5 shows of 2019", "Top 5 shows of 2019", "Top 5 shows from 3 years ago", "Top 5 shows from three years ago"],
+        "responses": ["!q_t5s2019"],
+        "context_set": ""
+    }
+]
+}
