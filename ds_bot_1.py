@@ -24,16 +24,16 @@ async def on_message(message):
         await message.channel.send("I am a discord bot that can use an openai language model that can generate responses to most questions.\nFor "
         "example, you can ask me \"What is the meaning of life?\" or \"What is the "
         "meaning of the universe?\"\nI can also generate images based on a prompt. "
-        "For example, you can ask me !createImage a picture of a dog.\"")
+        "For example, you can ask me !createImage a picture of a dog\".")
         return
     if message.content.startswith("!createImage"):
-        image = openai.Image.create(
-            prompt=message.content[13:],
-            n=1,
-            size="1024x1024"
-        )
-        # download the image and send it
         try:
+            image = openai.Image.create(
+                prompt=message.content[13:413],
+                n=1,
+                size="1024x1024"
+            )
+            # download the image and send it   
             image_r = requests.get(image['data'][0]['url'], allow_redirects=True).content
             open('temp_image.png', 'wb').write(image_r)
             await message.channel.send(file=discord.File('temp_image.png'))
