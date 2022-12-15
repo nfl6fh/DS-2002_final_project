@@ -1,6 +1,18 @@
 import sys
 import pymongo
 import pandas as pd
+import nltk
+nltk.download('punkt')
+from nltk import word_tokenize,sent_tokenize
+
+from nltk.stem.lancaster import LancasterStemmer
+stemmer = LancasterStemmer()
+import numpy as np 
+import tflearn
+import tensorflow as tf
+import random
+import json
+import pickle
 
 def main(args):
     data_ingest()
@@ -46,8 +58,12 @@ def data_ingest():
     titles = pd.read_csv('data/raw_titles.csv', index_col=0)
     dfs = [shows, show_yr, movies, movie_yr, credits, titles]
 
-    # drop columns if not needed
-    shows = shows.drop(columns=[])
+    # remove irrelevant data
+    shows = shows.where(shows.RELEASE_YEAR >= 2015).dropna()
+    movies = movies.where(movies.RELEASE_YEAR >= 2015).dropna()
+    show_yr = show_yr.where(show_yr.RELEASE_YEAR >= 2015).dropna()
+    movie_yr = movie_yr.where(movie_yr.RELEASE_YEAR >= 2015).dropna()
+    titles = titles.where(titles.release_year >= 2015).dropna()
     return
 
 def full_functionality():
@@ -130,6 +146,12 @@ def full_functionality():
 
     # Start the Discord client
     client.run(os.getenv('DISCORD_TOKEN'))
+
+def read_query(query):
+    query = query.lower()
+    query = query.replace('?', '')
+    
+    return query
 
 if __name__ == '__main__':
     main(sys.argv)
