@@ -1,7 +1,9 @@
 import sys
 import pymongo
+import pandas as pd
 
 def main(args):
+    data_ingest()
     if len(args) == 1:
         full_functionality()
     elif len(args) == 2 and args[1] == '--demo':
@@ -30,6 +32,22 @@ def demo():
         else:
             print('Message sent')
 
+def data_ingest():
+    print('Ingesting data...')
+    # Connect to MongoDB
+    client = pymongo.MongoClient('mongodb://localhost:27017/')
+    db = client['netflix']
+    # Ingest data
+    shows = pd.read_csv('data/Best Shows Netflix.csv', index_col=0)
+    show_yr = pd.read_csv('data/Best Show by Year Netflix.csv', index_col=0)
+    movies = pd.read_csv('data/Best Movies Netflix.csv', index_col=0)
+    movie_yr = pd.read_csv('data/Best Movie by Year Netflix.csv', index_col=0)
+    credits = pd.read_csv('data/raw_credits.csv', index_col=0)
+    titles = pd.read_csv('data/raw_titles.csv', index_col=0)
+    dfs = [shows, show_yr, movies, movie_yr, credits, titles
+    ]
+    return
+
 def full_functionality():
     import openai
     import discord
@@ -52,13 +70,13 @@ def full_functionality():
         print(f'message:\n    author: "{message.author}",\n    content: "{message.content}",\n    channel: "{message.channel}",')
         if message.content == "":
             return
-        if message.content.startswith("!help"):
+        elif message.content.startswith("!help"):
             await message.channel.send("I am a discord bot primarily designed to answer questions regarding a netflix dataset"
             "\nI can also generate images based on a prompt. "
             "For example, you can ask me \"!createImage a picture of a dog.\"\n"
             "You can also ask me to use OpenAI's gpt3 model to generate a response to a message by prefixing it with \"!gpt3 \".")
             return
-        if message.content.startswith("!createImage"):
+        elif message.content.startswith("!createImage"):
             try:
                 image = openai.Image.create(
                     prompt=message.content[13:],
@@ -96,7 +114,7 @@ def full_functionality():
             else:
                 await message.channel.send("I don't understand")
                 print(f'    reply: "I don\'t understand"')
-        if message.content.startswith("!"):
+        elif message.content.startswith("!"):
             await message.channel.send("I don't understand that command. Try !help.")
             return
 
