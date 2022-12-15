@@ -4,3 +4,10 @@ discord
 python-dotenv
 pymongo
 pandas
+nltk
+numpy
+tflearn
+tensorflow
+random
+json
+pickle
