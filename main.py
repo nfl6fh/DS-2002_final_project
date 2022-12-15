@@ -121,14 +121,25 @@ def demo():
             print('Goodbye!')
             break
         elif message.startswith('!help'):
-            print("I am a discord bot primarily designed to answer questions regarding a netflix dataset"
+            print("I am a discord bot primarily designed to answer questions regarding the past 5 years in a netflix dataset\n"
+            "Things you can ask me include:\n"
+            "1. \"What is the best show on netflix?\"\n"
+            "2. \"What is the best show on netflix in [2017-2021]?\"\n"
+            "3. \"What is the best movie on netflix?\"\n"
+            "4. \"What is the best movie on netflix in [2017-2021]?\"\n"
+            "5. \"What were the top 5 shows on netflix in [2017-2021]?\"\n"
+            "6. \"What were the top 5 movies on netflix in [2017-2021]?\"\n"
+            "7. \"What is the average rating of the top 5 shows on netflix in [2017-2021]?\"\n"
+            "8. \"What is the average rating of the top 5 movies on netflix in [2017-2021]?\"\n"
+            "9. \"What is the average rating of the top 5 shows on netflix?\"\n"
+            "10. \"What is the average rating of the top 5 movies on netflix?\"\n"
             "\nI can also generate images based on a prompt. "
             "For example, you can ask me \"!createImage a picture of a dog.\"\n"
             "You can also ask me to use OpenAI's gpt3 model to generate a response to a message by prefixing it with \"!gpt3 \".")
         elif message.startswith('!createImage'):
-            print(f'Image of {message[13:]} generated')
+            print(f'Image of "{message[13:]}" generated')
         elif message.startswith('!gpt3'):
-            print(f'Response generated for {message[6:]}')
+            print(f'Response generated for "{message[6:]}"')
         elif message.startswith('!'):
             print('Unknown command. Try !help.')
         else:
@@ -149,11 +160,11 @@ def data_ingest():
     dfs = [shows, show_yr, movies, movie_yr, credits, titles]
 
     # remove irrelevant data
-    shows = shows.where(shows.RELEASE_YEAR >= 2015).dropna()
-    movies = movies.where(movies.RELEASE_YEAR >= 2015).dropna()
-    show_yr = show_yr.where(show_yr.RELEASE_YEAR >= 2015).dropna()
-    movie_yr = movie_yr.where(movie_yr.RELEASE_YEAR >= 2015).dropna()
-    titles = titles.where(titles.release_year >= 2015).dropna()
+    shows = shows.where(shows.RELEASE_YEAR >= 2017).dropna()
+    movies = movies.where(movies.RELEASE_YEAR >= 2017).dropna()
+    show_yr = show_yr.where(show_yr.RELEASE_YEAR >= 2017).dropna()
+    movie_yr = movie_yr.where(movie_yr.RELEASE_YEAR >= 2017).dropna()
+    titles = titles.where(titles.release_year >= 2017).dropna()
     return
 
 def full_functionality():
@@ -225,6 +236,11 @@ def full_functionality():
         elif message.content.startswith("!"):
             await message.channel.send("I don't understand that command. Try !help.")
             return
+        else:
+            # Use the model to generate a response to the user's message
+            reply = respond(message.content)
+            await message.channel.send(reply)
+            print(f'    reply: "{reply}"')
 
     @client.event
     async def on_member_join(member):
