@@ -132,8 +132,9 @@ def demo():
             "7. \"What is the average rating of the top 5 shows on netflix in [2017-2021]?\"\n"
             "8. \"What is the average rating of the top 5 movies on netflix in [2017-2021]?\"\n"
             "9. \"What is the average rating of the top 5 shows on netflix?\"\n"
-            "10. \"What is the average rating of the top 5 movies on netflix?\"\n"
-            "\nI can also generate images based on a prompt. "
+            "10. \"What is the average rating of the top 5 movies on netflix?\"\n\n"
+            "The following aren't available in the demo version:\n"
+            "I can also generate images based on a prompt. "
             "For example, you can ask me \"!createImage a picture of a dog.\"\n"
             "You can also ask me to use OpenAI's gpt3 model to generate a response to a message by prefixing it with \"!gpt3 \".")
         elif message.startswith('!createImage'):
@@ -155,16 +156,14 @@ def data_ingest():
     show_yr = pd.read_csv('data/Best Show by Year Netflix.csv', index_col=0)
     movies = pd.read_csv('data/Best Movies Netflix.csv', index_col=0)
     movie_yr = pd.read_csv('data/Best Movie by Year Netflix.csv', index_col=0)
-    credits = pd.read_csv('data/raw_credits.csv', index_col=0)
-    titles = pd.read_csv('data/raw_titles.csv', index_col=0)
-    dfs = [shows, show_yr, movies, movie_yr, credits, titles]
 
-    # remove irrelevant data
+    # remove irrelevant data (not from 2017-2022)
     shows = shows.where(shows.RELEASE_YEAR >= 2017).dropna()
     movies = movies.where(movies.RELEASE_YEAR >= 2017).dropna()
     show_yr = show_yr.where(show_yr.RELEASE_YEAR >= 2017).dropna()
     movie_yr = movie_yr.where(movie_yr.RELEASE_YEAR >= 2017).dropna()
-    titles = titles.where(titles.release_year >= 2017).dropna()
+
+
     return
 
 def full_functionality():
@@ -190,8 +189,21 @@ def full_functionality():
         if message.content == "":
             return
         elif message.content.startswith("!help"):
-            await message.channel.send("I am a discord bot primarily designed to answer questions regarding a netflix dataset"
-            "\nI can also generate images based on a prompt. "
+            await message.channel.send("I am a discord bot primarily designed to answer questions regarding the past 5 years in a netflix dataset\n"
+            "Things you can ask me include:\n"
+            "1. \"What is the best show on netflix?\"\n"
+            "2. \"What is the best show on netflix in [2017-2021]?\"\n"
+            "3. \"What is the best movie on netflix?\"\n"
+            "4. \"What is the best movie on netflix in [2017-2021]?\"\n"
+            "5. \"What were the top 5 shows on netflix in [2017-2021]?\"\n"
+            "6. \"What were the top 5 movies on netflix in [2017-2021]?\"\n"
+            "7. \"What is the average rating of the top 5 shows on netflix in [2017-2021]?\"\n"
+            "8. \"What is the average rating of the top 5 movies on netflix in [2017-2021]?\"\n"
+            "9. \"What is the average rating of the top 5 shows on netflix?\"\n"
+            "10. \"What is the average rating of the top 5 movies on netflix?\"\n"
+            "For questions 1, 3, 9, and 10 this will be for over the past 5 years.\n"
+            "For the other questions please specify a year.\n\n"
+            "I can also generate images based on a prompt. "
             "For example, you can ask me \"!createImage a picture of a dog.\"\n"
             "You can also ask me to use OpenAI's gpt3 model to generate a response to a message by prefixing it with \"!gpt3 \".")
             return
@@ -237,7 +249,7 @@ def full_functionality():
             await message.channel.send("I don't understand that command. Try !help.")
             return
         else:
-            # Use the model to generate a response to the user's message
+            # Use the local model to generate a response to the user's message
             reply = respond(message.content)
             await message.channel.send(reply)
             print(f'    reply: "{reply}"')
@@ -263,10 +275,29 @@ def respond(query):
         for tg in data["intents"]:
             if tg['tag'] == tag:
                 responses = tg['responses']
-        return (random.choice(responses))
-
+        choice =  random.choice(responses)
+        if choice.startswith('!q'):
+            choice = query(choice)
     else:
         return ("I didnt get that. Can you explain or try again.")
+
+def query(query):
+    if query.startswith('!q'):
+        query = query[3:]
+    query = query.lower()
+    show = True
+    if query[2] == 'm':
+        show = False
+    query = query[3:]
+    if query[0] == '2':
+        year = int(query[0:4])
+        query = query[4:]
+        if query:  
+            pass   
+    else:
+        year = 0
+    
+    return query
 
 if __name__ == '__main__':
     main(sys.argv)
