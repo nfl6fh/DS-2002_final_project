@@ -12,13 +12,14 @@ DISCORD_TOKEN=<your discord bot token>
 MONGO_URI=<your mongo uri>
 OPENAI_API_TOKEN=<your openai api token>
 ```
-4. Ensure you have the following python packages installed
+4. Ensure you have the following python packages installed (this can be done by running `pip install -r requirements.txt` in the root directory of the project)
 ```
 discord.py
 pymongo
 openai
 requests
 dotenv
+pandas
 ```
 5. Run the main.py file with `python main.py` in the root directory of the project
 6. Invite the bot to your server with admin permissions (You can give it fewer permissions if you want, but it will not work as intended without a change to the intents in main.py)
