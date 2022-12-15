@@ -44,8 +44,10 @@ def data_ingest():
     movie_yr = pd.read_csv('data/Best Movie by Year Netflix.csv', index_col=0)
     credits = pd.read_csv('data/raw_credits.csv', index_col=0)
     titles = pd.read_csv('data/raw_titles.csv', index_col=0)
-    dfs = [shows, show_yr, movies, movie_yr, credits, titles
-    ]
+    dfs = [shows, show_yr, movies, movie_yr, credits, titles]
+
+    # drop columns if not needed
+    shows = shows.drop(columns=[])
     return
 
 def full_functionality():
