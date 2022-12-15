@@ -5,7 +5,7 @@ This is my final project for DS 2002 in the Fall 2022 semester. It is a discord 
 
 ## How to run with full functionality
 1. Clone the repository
-2. Create a file called .env in the root directory of the project
+2. Create a file called .env in the root directory of the project (this can be done by running `touch .env` in the root directory of the project)
 3. Add the following to the .env file
 ```
 DISCORD_TOKEN=<your discord bot token>
