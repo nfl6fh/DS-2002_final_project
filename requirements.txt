@@ -7,4 +7,3 @@ pandas
 nltk
 numpy
 tflearn
-tensorflow

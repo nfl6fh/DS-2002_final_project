@@ -18,13 +18,19 @@
         "context_set": ""
     },
     {
+        "tag": "top5_movies_2022",
+        "patterns": ["What are the top 5 movies of 2022", "Top 5 movies of 2022", "Top 5 movies from this year", "Top 5 movies from this year"],
+        "responses": ["!q_5m2022"],
+        "context_set": ""
+    },
+    {
         "tag": "top5_movies_2019",
         "patterns": ["What are the top 5 movies of 2019", "Top 5 movies of 2019", "Top 5 movies from 3 years ago", "Top 5 movies from three years ago"],
         "responses": ["!q_5m2019"],
         "context_set": ""
     },
     {
-        "tag": "top5_movies_20218",
+        "tag": "top5_movies_2018",
         "patterns": ["What are the top 5 movies of 2018", "Top 5 movies of 2018", "Top 5 movies from 4 years ago", "Top 5 movies from four years ago"],
         "responses": ["!q_5m2018"],
         "context_set": ""
@@ -48,6 +54,24 @@
         "context_set": ""
     },
     {
+        "tag": "top5_shows_2022",
+        "patterns": ["What are the top 5 shows of 2022", "Top 5 shows of 2022", "Top 5 shows from this year", "Top 5 shows from this year"],
+        "responses": ["!q_5s2022"],
+        "context_set": ""
+    },
+    {
+        "tag": "top5_shows_2018",
+        "patterns": ["What are the top 5 shows of 2018", "Top 5 shows of 2018", "Top 5 shows from 4 years ago", "Top 5 shows from four years ago"],
+        "responses": ["!q_5s2018"],
+        "context_set": ""
+    },
+    {
+        "tag": "top5_shows_2017",
+        "patterns": ["What are the top 5 shows of 2017", "Top 5 shows of 2017", "Top 5 shows from 5 years ago", "Top 5 shows from five years ago"],
+        "responses": ["!q_5s2017"],
+        "context_set": ""
+    },
+    {
         "tag": "top5_shows_2019",
         "patterns": ["What are the top 5 shows of 2019", "Top 5 shows of 2019", "Top 5 shows from 3 years ago", "Top 5 shows from three years ago"],
         "responses": ["!q_5s2019"],
@@ -67,13 +91,13 @@
     },
     {
         "tag": "best_show_p5yrs",
-        "patterns": ["What is the best show of the past 5 years", "Best show of the past 5 years", "Best show from the past 5 years", "Best show from the past five years"],
+        "patterns": ["What is the best show of the past 5 years", "What is the best show on netflix in the past 5 years?", "Best show of the past 5 years", "Best show from the past 5 years", "Best show from the past five years"],
         "responses": ["!q_1sp"],
         "context_set": ""
     },
     {
         "tag": "best_movie_p5yrs",
-        "patterns": ["What is the best movie of the past 5 years", "Best movie of the past 5 years", "Best movie from the past 5 years", "Best movie from the past five years"],
+        "patterns": ["What is the best movie of the past 5 years", "What is the best movie on netflix in the past 5 years?", "Best movie of the past 5 years", "Best movie from the past 5 years", "Best movie from the past five years"],
         "responses": ["!q_1mp"],
         "context_set": ""
     },

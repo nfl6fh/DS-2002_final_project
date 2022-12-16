@@ -1,6 +1,8 @@
 import sys
 import pymongo
-import pandas as pd
+import re
+
+client = pymongo.MongoClient('mongodb://localhost:27017/')
 
 # BEGIN: From in-class demo
 import nltk
@@ -11,7 +13,6 @@ from nltk.stem.lancaster import LancasterStemmer
 stemmer = LancasterStemmer()
 import numpy as np 
 import tflearn
-import tensorflow as tf
 import random
 import json
 import pickle
@@ -103,7 +104,6 @@ def bag_of_words(s, words):
 # END: From in-class demo
 
 def main(args):
-    data_ingest()
     if len(args) == 1:
         full_functionality()
     elif len(args) == 2 and args[1] == '--demo':
@@ -123,14 +123,14 @@ def demo():
         elif message.startswith('!help'):
             print("I am a discord bot primarily designed to answer questions regarding the past 5 years in a netflix dataset\n"
             "Things you can ask me include:\n"
-            "1. \"What is the best show on netflix?\"\n"
+            "1. \"What is the best show on netflix in the past 5 years?\"\n"
             "2. \"What is the best show on netflix in [2017-2021]?\"\n"
-            "3. \"What is the best movie on netflix?\"\n"
-            "4. \"What is the best movie on netflix in [2017-2021]?\"\n"
+            "3. \"What is the best movie on netflix in the past 5 years?\"\n"
+            "4. \"What is the best movie on netflix in [2017-2021]?\"\n" 
             "5. \"What were the top 5 shows on netflix in [2017-2021]?\"\n"
-            "6. \"What were the top 5 movies on netflix in [2017-2021]?\"\n"
-            "7. \"What is the average rating of the top 5 shows on netflix in [2017-2021]?\"\n"
-            "8. \"What is the average rating of the top 5 movies on netflix in [2017-2021]?\"\n"
+            "6. \"What were the top 5 movies on netflix in [2017-2021]?\"\n" 
+            "7. \"What were the top 5 shows from the past 5 years?\"\n"
+            "8. \"What were the top 5 movies from the past 5 years?\"\n"
             "9. \"What is the average rating of the top 5 shows on netflix?\"\n"
             "10. \"What is the average rating of the top 5 movies on netflix?\"\n\n"
             "The following aren't available in the demo version:\n"
@@ -145,26 +145,6 @@ def demo():
             print('Unknown command. Try !help.')
         else:
             print(f'Response: {respond(message)}')
-
-def data_ingest():
-    print('Ingesting data...')
-    # Connect to MongoDB
-    client = pymongo.MongoClient('mongodb://localhost:27017/')
-    db = client['netflix']
-    # Ingest data
-    shows = pd.read_csv('data/Best Shows Netflix.csv', index_col=0)
-    show_yr = pd.read_csv('data/Best Show by Year Netflix.csv', index_col=0)
-    movies = pd.read_csv('data/Best Movies Netflix.csv', index_col=0)
-    movie_yr = pd.read_csv('data/Best Movie by Year Netflix.csv', index_col=0)
-
-    # remove irrelevant data (not from 2017-2022)
-    shows = shows.where(shows.RELEASE_YEAR >= 2017).dropna()
-    movies = movies.where(movies.RELEASE_YEAR >= 2017).dropna()
-    show_yr = show_yr.where(show_yr.RELEASE_YEAR >= 2017).dropna()
-    movie_yr = movie_yr.where(movie_yr.RELEASE_YEAR >= 2017).dropna()
-
-
-    return
 
 def full_functionality():
     import openai
@@ -191,18 +171,16 @@ def full_functionality():
         elif message.content.startswith("!help"):
             await message.channel.send("I am a discord bot primarily designed to answer questions regarding the past 5 years in a netflix dataset\n"
             "Things you can ask me include:\n"
-            "1. \"What is the best show on netflix?\"\n"
+            "1. \"What is the best show on netflix in the past 5 years?\"\n"
             "2. \"What is the best show on netflix in [2017-2021]?\"\n"
-            "3. \"What is the best movie on netflix?\"\n"
+            "3. \"What is the best movie on netflix in the past 5 years?\"\n"
             "4. \"What is the best movie on netflix in [2017-2021]?\"\n"
             "5. \"What were the top 5 shows on netflix in [2017-2021]?\"\n"
             "6. \"What were the top 5 movies on netflix in [2017-2021]?\"\n"
-            "7. \"What is the average rating of the top 5 shows on netflix in [2017-2021]?\"\n"
-            "8. \"What is the average rating of the top 5 movies on netflix in [2017-2021]?\"\n"
+            "7. \"What were the top 5 shows from the past 5 years?\"\n"
+            "8. \"What were the top 5 movies from the past 5 years?\"\n"
             "9. \"What is the average rating of the top 5 shows on netflix?\"\n"
-            "10. \"What is the average rating of the top 5 movies on netflix?\"\n"
-            "For questions 1, 3, 9, and 10 this will be for over the past 5 years.\n"
-            "For the other questions please specify a year.\n\n"
+            "10. \"What is the average rating of the top 5 movies on netflix?\"\n\n"
             "I can also generate images based on a prompt. "
             "For example, you can ask me \"!createImage a picture of a dog.\"\n"
             "You can also ask me to use OpenAI's gpt3 model to generate a response to a message by prefixing it with \"!gpt3 \".")
@@ -277,27 +255,68 @@ def respond(query):
                 responses = tg['responses']
         choice =  random.choice(responses)
         if choice.startswith('!q'):
-            choice = query(choice)
+            choice = query_func(choice, original = query)
+        return choice
     else:
         return ("I didnt get that. Can you explain or try again.")
 
-def query(query):
-    if query.startswith('!q'):
-        query = query[3:]
-    query = query.lower()
-    show = True
-    if query[2] == 'm':
-        show = False
-    query = query[3:]
-    if query[0] == '2':
-        year = int(query[0:4])
-        query = query[4:]
-        if query:  
-            pass   
+def query_func(query, original):
+    db = client['netflix']
+    # print(db.list_collection_names())
+    if query[3] == '1':
+        num = 1
     else:
-        year = 0
+        num = 5
+    movie = True
+    if query[4] == 's':
+        movie = False
+    average = False
+    year = 0
+    if query[5] == '2':
+        year = int(query[5:9])
+        if re.search(r'[0-9]{4}', original):
+            year = int(re.search(r'[0-9]{4}', original).group())
+    elif query[5] == 'r':
+        average = True
+    if movie:
+        if year: # if movie and titles and year
+            # print(f'Finding {num} best movies from {year}')
+            result = f'The top{" 5" if num == 5 else ""} movie{"s" if num == 5 else ""} from {year} {"are" if num == 5 else "is"}:'
+            for i, movie in enumerate(db.movies.find({'RELEASE_YEAR': year}, {'_id': 0, 'TITLE': 1, 'SCORE': 1}).sort('SCORE', -1).limit(num)):
+                result += f'\n  {i+1}. {str(movie)}'
+            return result
+        elif average: # if movie and titles and average
+            # print(f'Finding average rating of top 5 movies from the past 5 years')
+            cumm_sum = 0
+            for movie in db.movies.find({}, {'SCORE':1}).sort('SCORE',-1).limit(5):
+                cumm_sum += movie['SCORE']
+            return f'The average rating of the top 5 movies from the past 5 years is {round(cumm_sum/5,2)}'
+        else: # if movie an titles and not average
+            # print(f'Finding top {num} movies from the past 5 years')
+            result = f'The top{" 5" if num == 5 else ""} movie{"s" if num == 5 else ""} from the past 5 years {"are" if num == 5 else "is"}:'
+            for i, movie in enumerate(db.movies.find({}, {'_id': 0, 'TITLE': 1, 'SCORE': 1, 'RELEASE_YEAR': 1}).sort('SCORE', -1).limit(num)):
+                result += f'\n  {i+1}. {str(movie)}'
+            return result
+    else:
+        if year: # if not movie and year
+            # print(f'Finding {num} best movies from {year}')
+            result = f'The top{" 5" if num == 5 else ""} show{"s" if num == 5 else ""} from {year} {"are" if num == 5 else "is"}:'
+            for i, show in enumerate(db.shows.find({'RELEASE_YEAR': year}, {'_id': 0, 'TITLE': 1, 'SCORE': 1}).sort('SCORE', -1).limit(num)):
+                result += f'\n  {i+1}. {str(show)}'
+            return result
+        elif average: # if not movie and average
+            cumm_sum = 0
+            for show in db.shows.find({}, {'SCORE':1}).sort('SCORE',-1).limit(5):
+                cumm_sum += show['SCORE']
+            return f'The average rating of the top 5 shows from the past 5 years is {round(cumm_sum/5,2)}'
+        else: # if not movie and not average
+            result = f'The top{" 5" if num == 5 else ""} show{"s" if num == 5 else ""} from the past 5 years {"are" if num == 5 else "is"}:'
+            for i, show in enumerate(db.shows.find({}, {'_id': 0, 'TITLE': 1, 'SCORE': 1, 'RELEASE_YEAR': 1}).sort('SCORE', -1).limit(num)):
+                result += f'\n  {i+1}. {str(show)}'
+            return result
+
+            
     
-    return query
 
 if __name__ == '__main__':
     main(sys.argv)
