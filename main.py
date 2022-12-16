@@ -276,6 +276,8 @@ def query_func(query, original):
         year = int(query[5:9])
         if re.search(r'[0-9]{4}', original):
             year = int(re.search(r'[0-9]{4}', original).group())
+        else:
+            year = 0
     elif query[5] == 'r':
         average = True
     if movie:
