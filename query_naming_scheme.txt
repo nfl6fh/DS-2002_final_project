@@ -1,0 +1,8 @@
+Naming scheme
+
+[0] - !
+[1] - q
+[2] - _
+[3] - [1|5] number of movies/shows to look at
+[4] - [m|s] movie or show
+[5] - [p|r|2] titles, ratings, or 1st digit of year
