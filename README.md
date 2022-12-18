@@ -20,8 +20,9 @@ requests
 python-dotenv
 pandas
 ```
-5. Run the main.py file with `python main.py` in the root directory of the project
-6. Invite the bot to your server with admin permissions (You can give it fewer permissions if you want, but it will not work as intended without a change to the intents in main.py)
+5. Run the data_ingest.py file with `python data_ingest.py` in the root directory of the project
+6. Run the main.py file with `python main.py` in the root directory of the project
+7. Invite the bot to your server with admin permissions (You can give it fewer permissions if you want, but it will not work as intended without a change to the intents in main.py)
 
 ## How to run as a demo bot in terminal
 Functionality available in the terminal:
@@ -36,5 +37,6 @@ image generation
 ```
 1. Clone the repository
 2. Ensure you have the pymongo python package installed
-3. Run the main.py file with `python main.py --demo` in the root directory of the project
-4. Interact with the bot in the terminal as you would in a discord chat
+3. Run the data_ingest.py file with `python data_ingest.py` in the root directory of the project
+4. Run the main.py file with `python main.py --demo` in the root directory of the project
+5. Interact with the bot in the terminal as you would in a discord chat
